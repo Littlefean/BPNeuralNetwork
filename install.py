@@ -7,6 +7,7 @@ import psutil
 import os
 import shutil
 import time
+import pip
 from PIL import Image
 
 
@@ -94,6 +95,9 @@ sec = time2 - time1
 
 print("创建write.png")
 Image.new("RGB", (28, 28)).save("write.png")
+
+print("安装依赖包")
+pip.main(["install", "watchfiles"])
 
 print()
 print("成功，用时", sec, "秒 (", sec / 60, "分钟)")
