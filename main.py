@@ -12,7 +12,15 @@ import os
 from PIL import Image
 from net import Net
 from dataSet import DataSet
+from watchfiles import watch
 
+def show(nt):
+    img = Image.open("write.png")
+    img = img.convert("RGB")
+    nt.inputImg(img)
+    nt.leftToRight()
+    nt.showInputImgMatrix()
+    nt.showResult()
 
 def main():
     for i in range(10):
@@ -50,20 +58,29 @@ def main():
     print("正确率：", rightCount / 100)
 
     nt.saveNetToFile("2023-2-19-测试1")
+    show(nt)
+
+    for changes in watch("write.png"):
+        print("write.png文件变动")
+        show(nt)
 
     # ========= 手动测试
-    while True:
-        nt.inputImg(Image.open("write.png"))
-        nt.leftToRight()
-        nt.showInputImgMatrix()
-        nt.showResult()
-        input("结束，Enter继续")
+    # while True:
+    #     nt.inputImg(Image.open("write.png"))
+    #     nt.leftToRight()
+    #     nt.showInputImgMatrix()
+    #     nt.showResult()
+    #     input("Enter继续")
 
 
 if __name__ == "__main__":
     t1 = perf_counter()
-    main()
-    t2 = perf_counter()
-    sec = t2 - t1
-    minute = sec / 60
-    print("程序用时", minute, "分钟")
+    try:
+        main()
+    except (EOFError, KeyboardInterrupt):
+        t2 = perf_counter()
+        sec = t2 - t1
+        minute = sec / 60
+        print()
+        print("按了ctrl c或者eof，结束运行")
+        print("程序用时", minute, "分钟")

@@ -151,9 +151,12 @@ class Net:
 
     def showResult(self):
         """打印当前网络结果层的点亮状态"""
+        a = []
         for i, n in enumerate(self._tempNodeLightList[-1]):
             print(f"[{i}] {round(n, 3)}", end="\t")
+            a.append((i, round(n, 3)))
         print()
+        print("可能性最高：", max(a, key=lambda x: x[1])[0])
         print("-" * 50)
 
     def getResult(self):
@@ -220,18 +223,17 @@ class Net:
         """获取权重矩阵，这个和书上是一致的，不是转置的"""
         return matrixTrans(self._weightArray[leftLayer])
 
-    def inputImg(self, im: Image):
+    def inputImg(self, img: Image):
         """输入一张灰度图"""
         arr = []
-        for y in range(im.height):
-            for x in range(im.width):
-                tup = im.getpixel((x, y))
+        for y in range(img.height):
+            for x in range(img.width):
+                tup = img.getpixel((x, y))
                 if len(tup) == 3:
                     r, g, b = tup
-                    arr.append((r + g + b) // 3 / 255)
                 elif len(tup) == 4:
-                    r, g, b, a = tup
-                    arr.append((r + g + b) // 3 / 255)
+                    r, g, b, _ = tup
+                arr.append((r + g + b) // 3 / 255)
         self.input(arr)
 
     def showInputImgMatrix(self):
@@ -240,8 +242,8 @@ class Net:
         for y in range(length):
             for x in range(length):
                 m = self._getNodeLight(0, y * length + x)
-                if m == 0.0:
-                    print(" . ", end="  ")
+                if m <= 0:
+                    print("   ", end="  ")
                 else:
                     print(round(m, 3), end="  ")
             print()
