@@ -57,13 +57,17 @@ def main():
         nt.leftToRight()
         nt.showInputImgMatrix()
         nt.showResult()
-        input("结束，Enter继续")
+        input("Enter继续")
 
 
 if __name__ == "__main__":
     t1 = perf_counter()
-    main()
-    t2 = perf_counter()
-    sec = t2 - t1
-    minute = sec / 60
-    print("程序用时", minute, "分钟")
+    try:
+        main()
+    except (EOFError, KeyboardInterrupt):
+        t2 = perf_counter()
+        sec = t2 - t1
+        minute = sec / 60
+        print()
+        print("按了ctrl c或者eof，结束运行")
+        print("程序用时", minute, "分钟")
